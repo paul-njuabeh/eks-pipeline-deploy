@@ -1,12 +1,3 @@
-# local .terraform dir
-.terraform/*
-
-# lock file
-.terraform.*
-
-# tf state files
-*.tfstate
-*.tfstate.*
 terraform {
   backend "s3" {
     bucket = "forward-project5"
