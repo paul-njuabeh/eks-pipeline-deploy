@@ -7,7 +7,7 @@ module "eks" {
     cluster_endpoint_public_access  = true
 
     vpc_id = aws_vpc.myapp-vpc.id
-    subnet_ids = var.subnet_ids
+    subnet_ids         = aws_subnet.myapp[*].id
 
     tags = {
         environment = "development"
