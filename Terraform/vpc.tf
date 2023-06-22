@@ -23,6 +23,10 @@ resource "aws_vpc" "myapp-vpc" {
 resource "aws_subnet" "myapp" {
   cidr_block        = "10.0.1.0/24"
   vpc_id               = aws_vpc.myapp-vpc.id # add vpc_id argument
+  subnet_ids = [
+  element(aws_subnet.myapp.*.id, 1),
+  element(aws_subnet.myapp.*.id, 2),
+]
   availability_zone    = data.aws_availability_zones.available.names[0]
   map_public_ip_on_launch = true
   tags = {
