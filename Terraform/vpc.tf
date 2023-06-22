@@ -14,9 +14,9 @@ resource "aws_vpc" "myapp-vpc" {
 
   tags = {
     Name                           = "${var.Dev}"
-    "kubernetes.io/cluster/${var.myapp-eks-cluster}" = "shared"
+     "kubernetes.io/cluster/var.myapp-eks-cluster" = "shared"
+    "kubernetes.io/role/elb"                  = 1
   }
-}
 
 resource "aws_subnet" "myapp" {
   count = 2
