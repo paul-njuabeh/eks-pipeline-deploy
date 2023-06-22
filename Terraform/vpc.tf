@@ -25,13 +25,6 @@ resource "aws_subnet" "myapp" {
   # rest of the subnet configuration
 }
 
-  tags = {
-    Name                           = var.availability_zone
-    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
-    "kubernetes.io/role/elb"                  = "1"
-  }
-}
-
 resource "aws_internet_gateway" "myapp" {
   vpc_id = aws_vpc.myapp-vpc.id
 
