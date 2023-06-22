@@ -27,7 +27,7 @@ resource "aws_subnet" "myapp" {
   cidr_block              = "10.0.${count.index}.0/24"
   map_public_ip_on_launch = true
   vpc_id                  = aws_vpc.myapp-vpc.id
-
+}
 
 resource "aws_internet_gateway" "myapp" {
   vpc_id = aws_vpc.myapp-vpc.id
