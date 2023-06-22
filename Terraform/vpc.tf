@@ -8,7 +8,7 @@ module "myapp-vpc" {
   public_subnets  = var.public_subnet_cidr_blocks
   azs             = data.aws_availability_zones.azs.names
 
-resource "aws_internet_gateway" "example_igw" {
+resource "aws_internet_gateway" "myapp_igw" {
   vpc_id = aws_vpc.myapp-vpc.id
 
   tags = {
