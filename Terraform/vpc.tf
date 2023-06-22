@@ -8,12 +8,12 @@
 
 data "aws_availability_zones" "available" {}
 resource "aws_vpc" "myapp-vpc" {
-  cidr_block           = var.myapp-vpc-cidr
+  cidr_block           = var.vpc_cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
-    Name                           = "${var.environment_name}-vpc"
+    Name                           = "${var.my-cluster-name}"
     "kubernetes.io/cluster/${var.myapp-eks-cluster}" = "shared"
   }
 }
