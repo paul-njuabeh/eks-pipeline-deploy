@@ -22,7 +22,7 @@ module "eks" {
             min_size = 2
             max_size = 3
             desired_size = 2
-            availability_zones = "us-east-2a", "us-east-2b"
+            availability_zones = ["us-east-2a", "us-east-2b"]
             instance_types = ["t2.small"]
         }
     }
