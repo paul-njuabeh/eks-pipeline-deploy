@@ -30,7 +30,7 @@ resource "aws_subnet" "myapp" {
 }
 
   tags = {
-    Name                           = var.Dev
+    Name                           = var.availability_zone
     "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
     "kubernetes.io/role/elb"                  = "1"
   }
