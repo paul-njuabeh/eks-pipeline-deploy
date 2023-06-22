@@ -8,23 +8,6 @@ module "myapp-vpc" {
   public_subnets  = var.public_subnet_cidr_blocks
   azs             = data.aws_availability_zones.azs.names
 
-resource "aws_internet_gateway" "myapp_igw" {
-  vpc_id = aws_vpc.myapp-vpc.id
-
-  tags = {
-    Name = "myapp-igw"
-  }
-}
-
-resource "aws_nat_gateway" "myapp_nat" {
-  allocation_id = var.nat_allocation_id
-  subnet_id     = aws_subnet.kubernetes.io/cluster/myapp-eks-cluster.id
-
-  tags = {
-    Name = "myapp-nat"
-  }
-}
-
   tags = {
     "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
   }
