@@ -1,24 +1,54 @@
-data "aws_availability_zones" "azs" {}
-module "myapp-vpc" {
-  source          = "terraform-aws-modules/vpc/aws"
-  version         = "3.19.0"
-  name            = "myapp-vpc"
+#
+# VPC Resources
+#  * VPC
+#  * Subnets
+#  * Internet Gateway
+#  * Route Table
+#
+
+resource "aws_vpc" "myapp-vpc" {
   cidr            = var.vpc_cidr_block
-  private_subnets = var.private_subnet_cidr_blocks
-  public_subnets  = var.public_subnet_cidr_blocks
-  azs             = data.aws_availability_zones.azs.names
+
+  tags = tomap({
+    "Name"                                      = "myapp-eks-cluster",
+    "kubernetes.io/cluster/${var.myapp-eks-cluster}" = "shared",
+  })
+}
+
+resource "aws_subnet" "myapp" {
+  count = 2
+
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  cidr_block              = "10.0.${count.index}.0/24"
+  map_public_ip_on_launch = true
+  vpc_id                  = aws_vpc.myapp-vpc.id
+
+  tags = tomap({
+    "Name"                                      = "myapp-eks-cluster",
+    "kubernetes.io/cluster/${var.myapp-eks-cluster}" = "shared",
+  })
+}
+
+resource "aws_internet_gateway" "myapp" {
+  vpc_id = aws_vpc.myapp-vpc.id
 
   tags = {
-    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
+    Name = "myapp-eks-cluster"
   }
+}
 
-  public_subnet_tags = {
-    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
-    "kubernetes.io/role/elb"                  = 1
-  }
+resource "aws_route_table" "myapp" {
+  vpc_id = aws_vpc.myapp-vpc.id
 
-  private_subnet_tags = {
-    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
-    "kubernetes.io/role/internal-elb"         = 1
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.myapp.id
   }
+}
+
+resource "aws_route_table_association" "myapp" {
+  count = 2
+
+  subnet_id      = aws_subnet.demo[count.index].id
+  route_table_id = aws_route_table.myapp.id
 }
