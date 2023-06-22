@@ -7,7 +7,7 @@
 #
 
 resource "aws_vpc" "myapp-vpc" {
-  cidr            = var.vpc_cidr_block
+cidr_block      = var.vpc_cidr_block
 
   tags = tomap({
     "Name"                                      = "myapp-eks-cluster",
