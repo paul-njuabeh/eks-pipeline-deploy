@@ -7,17 +7,18 @@
 #
 
 data "aws_availability_zones" "available" {}
+
 resource "aws_vpc" "myapp-vpc" {
   cidr_block           = var.vpc_cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
-}
 
   tags = {
-    Name                           = "${var.Dev}"
-     "kubernetes.io/cluster/var.myapp-eks-cluster" = "shared"
-    "kubernetes.io/role/elb"                  = 1
+    Name                           = var.Dev
+    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
+    "kubernetes.io/role/elb"                  = "1"
   }
+}
 
 resource "aws_subnet" "myapp" {
   count = 2
