@@ -50,6 +50,6 @@ resource "aws_route_table" "myapp" {
 resource "aws_route_table_association" "myapp" {
   count = 2
 
-  subnet_id = [element(aws_subnet.myapp.*.id, 1)]
+  subnet_id = element(aws_subnet.myapp.*.id, 1)
   route_table_id = aws_route_table.myapp.id
 }
