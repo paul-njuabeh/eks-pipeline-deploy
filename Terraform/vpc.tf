@@ -27,11 +27,13 @@ resource "aws_subnet" "myapp" {
   cidr_block              = "10.0.${count.index}.0/24"
   map_public_ip_on_launch = true
   vpc_id                  = aws_vpc.myapp-vpc.id
+}
 
-  tags = tomap({
-    "Name"                                      = "myapp-eks-cluster",
-    "kubernetes.io/cluster/${var.myapp-eks-cluster}" = "shared",
-  })
+  tags = {
+    Name                           = var.Dev
+    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
+    "kubernetes.io/role/elb"                  = "1"
+  }
 }
 
 resource "aws_internet_gateway" "myapp" {
