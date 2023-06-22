@@ -8,12 +8,14 @@
 
 data "aws_availability_zones" "available" {}
 resource "aws_vpc" "myapp-vpc" {
-cidr_block      = var.vpc_cidr_block
+  cidr_block           = var.myapp-vpc-cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
-  tags = tomap({
-    "Name"                                      = "myapp-eks-cluster",
-    "kubernetes.io/cluster/${var.myapp-eks-cluster}" = "shared",
-  })
+  tags = {
+    Name                           = "${var.environment_name}-vpc"
+    "kubernetes.io/cluster/${var.myapp-eks-cluster}" = "shared"
+  }
 }
 
 resource "aws_subnet" "myapp" {
