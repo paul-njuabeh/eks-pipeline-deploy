@@ -49,6 +49,6 @@ resource "aws_route_table" "myapp" {
 resource "aws_route_table_association" "myapp" {
   count = 2
 
-  subnet_id      = aws_subnet.demo[count.index].id
+  subnet_id      = aws_subnet.myapp.id
   route_table_id = aws_route_table.myapp.id
 }
