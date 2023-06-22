@@ -14,7 +14,7 @@ resource "aws_vpc" "myapp-vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name                           = var.enviroment
+    Name                           = var.Dev
     "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
     "kubernetes.io/role/elb"                  = "1"
   }
