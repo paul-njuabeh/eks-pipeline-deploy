@@ -87,8 +87,3 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_route_table_association" "private" {
-  count          = 2
-  subnet_id      = aws_subnet.myapp[count.index].id
-  route_table_id = aws_route_table.private.id
-}
