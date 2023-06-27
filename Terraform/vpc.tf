@@ -3,7 +3,8 @@
 #  * VPC
 #  * Subnets
 #  * Internet Gateway
-#  * Route Table
+#  * Route Tables
+#  * NAT Gateway
 #
 
 data "aws_availability_zones" "available" {}
@@ -37,19 +38,57 @@ resource "aws_internet_gateway" "myapp" {
   }
 }
 
-resource "aws_route_table" "myapp" {
+resource "aws_route_table" "public" {
   vpc_id = aws_vpc.myapp-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.myapp.id
   }
+
+  tags = {
+    Name = "Public Route Table"
+  }
 }
 
-resource "aws_route_table_association" "myapp" {
-  count = 2
+resource "aws_nat_gateway" "myapp" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.myapp[0].id
 
-  subnet_id = element(aws_subnet.myapp.*.id, 1)
-  route_table_id = aws_route_table.myapp.id
+  tags = {
+    Name = "NAT Gateway"
+  }
 }
 
+resource "aws_eip" "nat" {
+  vpc = true
+
+  tags = {
+    Name = "NAT EIP"
+  }
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.myapp-vpc.id
+
+  route {
+    cidr_block        = "0.0.0.0/0"
+    nat_gateway_id    = aws_nat_gateway.myapp.id
+  }
+
+  tags = {
+    Name = "Private Route Table"
+  }
+}
+
+resource "aws_route_table_association" "public" {
+  count          = 2
+  subnet_id      = aws_subnet.myapp[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "private" {
+  count          = 2
+  subnet_id      = aws_subnet.myapp[count.index].id
+  route_table_id = aws_route_table.private.id
+}
